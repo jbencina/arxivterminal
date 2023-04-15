@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "arxivterminal"
-version = "0.1.0"
+version = "0.2.0"
 description = "An application for summarizing Arxiv results within the terminal"
 authors = ["John Bencina <jbencina@users.noreply.github.com>"]
 license = "MIT"
@@ -17,6 +17,7 @@ arxiv = "^1.4.3"
 click = "^8.1.3"
 termcolor = "^2.2.0"
 appdirs = "^1.4.4"
+scikit-learn = "^1.2.2"
 
 
 [tool.poetry.group.dev.dependencies]

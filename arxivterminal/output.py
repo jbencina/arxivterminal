@@ -2,11 +2,17 @@ from typing import List
 
 from termcolor import colored
 
-from arxivterminal.db import ArxivStats
+from arxivterminal.constants import DATABASE_PATH, MODEL_PATH
+from arxivterminal.db import ArxivDatabase, ArxivStats
 from arxivterminal.fetch import ArxivPaper
+from arxivterminal.ml import LsaDocumentSearch
 
 
-def print_papers(papers: List[ArxivPaper]):
+class ExitAppException(Exception):
+    pass
+
+
+def print_papers(papers: List[ArxivPaper], show_dates: bool = True):
     """
     Print a list of Arxiv papers and their publication date in a formatted manner.
 
@@ -14,6 +20,9 @@ def print_papers(papers: List[ArxivPaper]):
     ----------
     papers : List[ArxivPaper]
         A list of ArxivPaper objects to be printed.
+    show_dates: bool
+        If true, then the publish date of the paper is shown. Otherwise, date headers are
+        omitted.
     """
     current_date = None
     total_papers = len(papers)
@@ -21,7 +30,7 @@ def print_papers(papers: List[ArxivPaper]):
     while True:
         for i, paper in enumerate(papers):
             paper_date = paper.published.date()
-            if paper_date != current_date:
+            if (paper_date != current_date) and show_dates:
                 print(colored(f"\n{paper_date}", "cyan"))
                 print(colored("".join(["-"] * 10), "cyan"))
                 current_date = paper_date
@@ -47,11 +56,17 @@ def print_papers(papers: List[ArxivPaper]):
                     print("Invalid line number. Please try again.")
             except ValueError:
                 if user_input.lower() == "q":
-                    return
+                    raise ExitAppException
+                elif user_input.lower() == "s":
+                    db = ArxivDatabase(str(DATABASE_PATH))
+                    lsa = LsaDocumentSearch(str(MODEL_PATH))
+                    search_results = lsa.search(db, selected_paper.summary)
+                    print_papers(search_results, show_dates=False)
+
                 print("Invalid input. Please try again.")
 
             user_input = input(
-                "Enter the line number to show the full abstract, 'b' to go back, or 'q' to quit: "
+                "Enter the line number to show the full abstract, 'b' to go back, 's' to search similar, or 'q' to quit: "  # noqa: E501
             )
 
 
