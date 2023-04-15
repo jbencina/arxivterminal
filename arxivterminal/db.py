@@ -1,7 +1,7 @@
 import logging
 import sqlite3
 from datetime import datetime
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from arxivterminal.models import ArxivPaper, ArxivStats
 
@@ -143,14 +143,17 @@ class ArxivDatabase:
         logging.info(f"Inserted {num_inserted} papers")
         logging.info(f"Updated {num_updated} papers")
 
-    def get_papers(self, published_after: datetime) -> List[ArxivPaper]:
+    def get_papers(
+        self, published_after: Optional[datetime] = None
+    ) -> List[ArxivPaper]:
         """
         Retrieve papers from the database that were published after a specified date.
 
         Parameters
         ----------
-        published_after : datetime
+        published_after : datetime, optional
             A datetime object representing the lower bound of the publication date for retrieved papers.
+            If None, then no filters are applied and all papers are returned.
 
         Returns
         -------
@@ -161,16 +164,26 @@ class ArxivDatabase:
         with sqlite3.connect(self.database_path) as conn:
             cursor = conn.cursor()
 
-            # Query the database for papers published after the specified date
-            cursor.execute(
+            if published_after is not None:
+                # Query the database for papers published after the specified date
+                cursor.execute(
+                    """
+                    SELECT entry_id, updated, published, title, summary, authors, categories
+                    FROM papers
+                    WHERE published >= ?
+                    ORDER BY published ASC
+                """,
+                    (published_after.isoformat(),),
+                )
+            else:
+                # Query the database for papers published after the specified date
+                cursor.execute(
+                    """
+                    SELECT entry_id, updated, published, title, summary, authors, categories
+                    FROM papers
+                    ORDER BY published ASC
                 """
-                SELECT entry_id, updated, published, title, summary, authors, categories
-                FROM papers
-                WHERE published >= ?
-                ORDER BY published ASC
-            """,
-                (published_after.isoformat(),),
-            )
+                )
 
             # Parse the results into ArxivPaper objects
             papers = []

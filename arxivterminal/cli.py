@@ -1,18 +1,14 @@
 import logging
 import sys
 from datetime import datetime, timedelta
-from pathlib import Path
 
 import click
-from appdirs import user_data_dir, user_log_dir
 
+from arxivterminal.constants import DATABASE_PATH, LOG_PATH, MODEL_PATH
 from arxivterminal.db import ArxivDatabase
 from arxivterminal.fetch import download_papers
-from arxivterminal.output import print_papers, print_stats
-
-APP_NAME = "arxivterminal"
-DATABASE_PATH = Path(user_data_dir(APP_NAME)) / "papers.db"
-LOG_PATH = Path(user_log_dir(APP_NAME)) / f"{APP_NAME}.log"
+from arxivterminal.ml import LsaDocumentSearch
+from arxivterminal.output import ExitAppException, print_papers, print_stats
 
 
 @click.group()
@@ -76,7 +72,11 @@ def show(days_ago):
     published_after = datetime.now() - timedelta(days=days_ago)
     db = ArxivDatabase(DATABASE_PATH)
     papers = db.get_papers(published_after)
-    print_papers(papers)
+
+    try:
+        print_papers(papers)
+    except ExitAppException:
+        sys.exit(0)
 
 
 @click.command()
@@ -93,7 +93,16 @@ def stats():
 
 @click.command()
 @click.argument("query")
-def search(query):
+@click.option(
+    "-e", "--experimental", is_flag=True, help="Uses experimental LSA relevance search"
+)
+@click.option(
+    "-f", "--force", is_flag=True, help="Forces a refresh of the experimental model"
+)
+@click.option(
+    "-l", "--limit", default=10, help="The maximum number of results to return"
+)
+def search(query, experimental, limit, force):
     """
     Search papers in the database based on a query.
 
@@ -101,10 +110,26 @@ def search(query):
     ----------
     query : str
         Search query for the papers.
+    experimental: bool
+        If toggled, then documents will be matched using an LSA model rather than a simple string pattern
+    limit: int
+        The maximum number of results to display.
+    force: bool
+        If toggled, then forces a refresh of the underlying model before performing a search.
     """
     db = ArxivDatabase(DATABASE_PATH)
-    papers = db.search_papers(query)
-    print_papers(papers)
+
+    if experimental:
+        # TODO: Try better approaches :)
+        lsa = LsaDocumentSearch(MODEL_PATH)
+        search_results = lsa.search(db, query, limit=limit, force_refresh=force)
+    else:
+        search_results = db.search_papers(query)[:limit]
+
+    try:
+        print_papers(search_results, show_dates=(not experimental))
+    except ExitAppException:
+        sys.exit(0)
 
 
 for cmd in [delete_all, fetch, search, show, stats]:
