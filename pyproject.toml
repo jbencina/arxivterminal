@@ -3,7 +3,7 @@ name = "arxivterminal"
 version = "0.2.0"
 description = "An application for summarizing Arxiv results within the terminal"
 authors = ["John Bencina <jbencina@users.noreply.github.com>"]
-license = "MIT"
+license = "GPL-3.0-or-later"
 readme = "README.md"
 
 [tool.poetry.dependencies]
