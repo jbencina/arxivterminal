@@ -8,6 +8,7 @@ Arxiv Terminal is a command-line interface (CLI) tool for fetching, searching, a
 - Fetch paper abstracts from specified categories and save them in a local sqllite database.
 - Show fetched papers and interatively open for more detailed abstracts
 - Search fetched papers based on a query (Currently supports pattern + LSA semantic search)
+- Download papers locally as PDF
 
 ![Demo](static/demo.gif)
 
@@ -59,6 +60,10 @@ Show papers fetched in the last 7 days
 
 ```bash
 arxiv show --days-ago 7
+
+# On this screen the user can select a paper for more
+# details by typing a line number. Additional options
+# allow for searching & downloading
 ```
 
 Display statistics of the papers stored in the database:
