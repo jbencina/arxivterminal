@@ -10,7 +10,7 @@ from arxivterminal.db import ArxivDatabase
 from arxivterminal.fetch import download_papers
 from arxivterminal.output import print_papers, print_stats
 
-APP_NAME = "arxivgpt"
+APP_NAME = "arxivterminal"
 DATABASE_PATH = Path(user_data_dir(APP_NAME)) / "papers.db"
 LOG_PATH = Path(user_log_dir(APP_NAME)) / f"{APP_NAME}.log"
 
