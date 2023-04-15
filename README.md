@@ -9,6 +9,8 @@ Arxiv Terminal is a command-line interface (CLI) tool for fetching, searching, a
 - Show fetched papers and interatively open for more detailed abstracts
 - Search fetched papers based on a query (Currently supports pattern + LSA semantic search)
 
+![Demo](static/demo.gif)
+
 ## Contributors
 A special call out to ChatGPT (v4) which helped write and modify various code and documentation in this repository.
 
