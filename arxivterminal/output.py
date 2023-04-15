@@ -27,6 +27,18 @@ def print_papers(papers: List[ArxivPaper], show_dates: bool = True):
     current_date = None
     total_papers = len(papers)
 
+    def _format_categories(categories: List[str]) -> str:
+        joined = ','.join(categories)
+        return f"[{joined}]"
+
+    def _format_authors(authors: List[str], max_len: int):
+        author_list = ', '.join(authors[:max_len])
+
+        if len(authors) > max_len:
+            author_list += ', et al.'
+
+        return author_list
+
     while True:
         for i, paper in enumerate(papers):
             paper_date = paper.published.date()
@@ -48,10 +60,12 @@ def print_papers(papers: List[ArxivPaper], show_dates: bool = True):
                 if 1 <= line_number <= total_papers:
                     selected_paper = papers[total_papers - line_number]
                     print(f"\n{colored(selected_paper.title, 'yellow')}")
-                    print(f"{colored(selected_paper.entry_id, 'blue')}")
+                    print(f"{_format_authors(selected_paper.authors, 3)}")
+                    print(f"\n{colored(selected_paper.entry_id, 'blue')}")
                     print(
-                        f"\n{colored('Abstract:', 'cyan')} {selected_paper.summary}\n"
+                        f"\n{colored('Abstract:', 'cyan')} {selected_paper.summary}"
                     )
+                    print(f"\nCategories: {_format_categories(selected_paper.categories)}\n")
                 else:
                     print("Invalid line number. Please try again.")
             except ValueError:
