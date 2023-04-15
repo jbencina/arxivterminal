@@ -1,5 +1,5 @@
 # Arxiv Terminal
-![Tests](https://github.com/jbencina/arxivterminal/actions/workflows/main.yml/badge.svg)
+![Tests](https://github.com/jbencina/arxivterminal/actions/workflows/main.yaml/badge.svg)
 
 Arxiv Terminal is a command-line interface (CLI) tool for fetching, searching, and displaying papers from the [arXiv](https://arxiv.org/) preprint repository. The tool allows you to fetch papers from specified categories, search the fetched papers, and display their statistics.
 
