@@ -1,0 +1,8 @@
+.venv
+.mypy_cache
+
+launch.json
+
+*.DS_Store
+*.db
+*.pyc
