@@ -4,6 +4,7 @@ from termcolor import colored
 
 from arxivterminal.constants import DATABASE_PATH, MODEL_PATH
 from arxivterminal.db import ArxivDatabase, ArxivStats
+from arxivterminal.download import download_paper
 from arxivterminal.fetch import ArxivPaper
 from arxivterminal.ml import LsaDocumentSearch
 
@@ -28,14 +29,14 @@ def print_papers(papers: List[ArxivPaper], show_dates: bool = True):
     total_papers = len(papers)
 
     def _format_categories(categories: List[str]) -> str:
-        joined = ','.join(categories)
+        joined = ",".join(categories)
         return f"[{joined}]"
 
     def _format_authors(authors: List[str], max_len: int):
-        author_list = ', '.join(authors[:max_len])
+        author_list = ", ".join(authors[:max_len])
 
         if len(authors) > max_len:
-            author_list += ', et al.'
+            author_list += ", et al."
 
         return author_list
 
@@ -62,15 +63,24 @@ def print_papers(papers: List[ArxivPaper], show_dates: bool = True):
                     print(f"\n{colored(selected_paper.title, 'yellow')}")
                     print(f"{_format_authors(selected_paper.authors, 3)}")
                     print(f"\n{colored(selected_paper.entry_id, 'blue')}")
+                    print(f"\n{colored('Abstract:', 'cyan')} {selected_paper.summary}")
                     print(
-                        f"\n{colored('Abstract:', 'cyan')} {selected_paper.summary}"
+                        f"\nCategories: {_format_categories(selected_paper.categories)}\n"
                     )
-                    print(f"\nCategories: {_format_categories(selected_paper.categories)}\n")
                 else:
                     print("Invalid line number. Please try again.")
             except ValueError:
                 if user_input.lower() == "q":
                     raise ExitAppException
+                elif user_input.lower() == "d":
+                    try:
+                        download_paper(selected_paper)
+                    except FileExistsError:
+                        pass
+                    user_input = input(
+                        "Enter 'b' to go back, 'd' to download, 's' to search similar, or 'q' to quit: "
+                    )
+                    continue
                 elif user_input.lower() == "s":
                     db = ArxivDatabase(str(DATABASE_PATH))
                     lsa = LsaDocumentSearch(str(MODEL_PATH))
@@ -80,7 +90,7 @@ def print_papers(papers: List[ArxivPaper], show_dates: bool = True):
                 print("Invalid input. Please try again.")
 
             user_input = input(
-                "Enter the line number to show the full abstract, 'b' to go back, 's' to search similar, or 'q' to quit: "  # noqa: E501
+                "Enter the line number to show the full abstract, 'b' to go back, 'd' to download, 's' to search similar, or 'q' to quit: "  # noqa: E501
             )
 
 
