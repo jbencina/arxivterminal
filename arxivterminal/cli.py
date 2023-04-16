@@ -26,19 +26,12 @@ def cli():
 @click.option("--num-days", default=7, help="Number of days to fetch papers.")
 @click.option(
     "--categories",
-    default="cs.AI",
+    default="cs.AI,cs.LG",  # AI and Machine Learning categories
     help="Comma-separated list of categories to fetch papers.",
 )
 def fetch(num_days, categories):
     """
     Fetch papers from the specified categories and store them in the database.
-
-    Parameters
-    ----------
-    num_days : int
-        Number of days to fetch papers.
-    categories : str
-        Comma-separated list of categories to fetch papers.
     """
     categories = categories.split(",")
     db = ArxivDatabase(DATABASE_PATH)
@@ -63,11 +56,6 @@ def delete_all():
 def show(days_ago):
     """
     Show papers fetched from the specified number of days ago.
-
-    Parameters
-    ----------
-    days_ago : int
-        Number of days ago to fetch papers.
     """
     published_after = datetime.now() - timedelta(days=days_ago)
     db = ArxivDatabase(DATABASE_PATH)
@@ -105,17 +93,6 @@ def stats():
 def search(query, experimental, limit, force):
     """
     Search papers in the database based on a query.
-
-    Parameters
-    ----------
-    query : str
-        Search query for the papers.
-    experimental: bool
-        If toggled, then documents will be matched using an LSA model rather than a simple string pattern
-    limit: int
-        The maximum number of results to display.
-    force: bool
-        If toggled, then forces a refresh of the underlying model before performing a search.
     """
     db = ArxivDatabase(DATABASE_PATH)
 
