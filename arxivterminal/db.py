@@ -34,7 +34,8 @@ class ArxivDatabase:
                     title TEXT,
                     summary TEXT,
                     authors TEXT,
-                    categories TEXT
+                    categories TEXT,
+                    viewed BOOLEAN DEFAULT 0
                 )
             """
             )
@@ -63,6 +64,7 @@ class ArxivDatabase:
             summary=row[4],
             authors=row[5].split(","),
             categories=row[6].split(","),
+            viewed=(row[7] == 1),
         )
 
     def save_papers(self, papers: List[ArxivPaper]):
@@ -121,8 +123,9 @@ class ArxivDatabase:
                             title,
                             summary,
                             authors,
-                            categories
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                            categories,
+                            viewed
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                         (
                             paper.entry_id,
@@ -132,6 +135,7 @@ class ArxivDatabase:
                             paper.summary,
                             ",".join(paper.authors),
                             ",".join(paper.categories),
+                            0,
                         ),
                     )
                     num_inserted += 1
@@ -168,7 +172,7 @@ class ArxivDatabase:
                 # Query the database for papers published after the specified date
                 cursor.execute(
                     """
-                    SELECT entry_id, updated, published, title, summary, authors, categories
+                    SELECT entry_id, updated, published, title, summary, authors, categories, viewed
                     FROM papers
                     WHERE published >= ?
                     ORDER BY published ASC
@@ -179,7 +183,7 @@ class ArxivDatabase:
                 # Query the database for papers published after the specified date
                 cursor.execute(
                     """
-                    SELECT entry_id, updated, published, title, summary, authors, categories
+                    SELECT entry_id, updated, published, title, summary, authors, categories, viewed
                     FROM papers
                     ORDER BY published ASC
                 """
@@ -231,7 +235,7 @@ class ArxivDatabase:
             # Query the database for papers with the search phrase in the title or summary
             cursor.execute(
                 """
-                SELECT entry_id, updated, published, title, summary, authors, categories
+                SELECT entry_id, updated, published, title, summary, authors, categories, viewed
                 FROM papers
                 WHERE title LIKE ? OR summary LIKE ?
                 ORDER BY published ASC
@@ -246,6 +250,29 @@ class ArxivDatabase:
                 papers.append(paper)
 
         return papers
+
+    def mark_paper_viewed(self, paper: ArxivPaper):
+        """
+        Marks a paper as viewed
+
+        Parameters
+        ----------
+        paper: ArxivPaper
+            The ArxivPaper to be marked as viewed
+        """
+        with sqlite3.connect(self.database_path) as conn:
+            cursor = conn.cursor()
+
+            # Update the 'viewed' column for the specified paper
+            cursor.execute(
+                """
+                UPDATE papers
+                SET viewed = 1
+                WHERE entry_id = ?
+            """,
+                (paper.entry_id,),
+            )
+            conn.commit()
 
     def get_stats(self) -> List[ArxivStats]:
         """

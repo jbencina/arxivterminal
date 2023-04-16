@@ -48,7 +48,13 @@ def print_papers(papers: List[ArxivPaper], show_dates: bool = True):
                 print(colored("".join(["-"] * 10), "cyan"))
                 current_date = paper_date
             inverted_line_number = total_papers - i
-            print(f"{colored(inverted_line_number, 'yellow')}. {paper.title}")
+
+            if paper.viewed:
+                print(
+                    f"{colored(inverted_line_number, 'green')}. {colored(paper.title, 'green')}"
+                )
+            else:
+                print(f"{colored(inverted_line_number, 'yellow')}. {paper.title}")
 
         # Get the line number from the user
         user_input = input(
@@ -59,7 +65,8 @@ def print_papers(papers: List[ArxivPaper], show_dates: bool = True):
             try:
                 line_number = int(user_input)
                 if 1 <= line_number <= total_papers:
-                    selected_paper = papers[total_papers - line_number]
+                    selected_index = total_papers - line_number
+                    selected_paper = papers[selected_index]
                     print(f"\n{colored(selected_paper.title, 'yellow')}")
                     print(f"{_format_authors(selected_paper.authors, 3)}")
                     print(f"\n{colored(selected_paper.entry_id, 'blue')}")
@@ -67,6 +74,9 @@ def print_papers(papers: List[ArxivPaper], show_dates: bool = True):
                     print(
                         f"\nCategories: {_format_categories(selected_paper.categories)}\n"
                     )
+                    db = ArxivDatabase(str(DATABASE_PATH))
+                    db.mark_paper_viewed(selected_paper)
+                    papers[selected_index].viewed = True
                 else:
                     print("Invalid line number. Please try again.")
             except ValueError:

@@ -58,6 +58,7 @@ def download_papers(
             summary=result.summary,
             authors=[a.name for a in result.authors],
             categories=result.categories,
+            viewed=False,
         )
         if paper.published >= start_date and paper.published <= end_date:
             papers.append(paper)
