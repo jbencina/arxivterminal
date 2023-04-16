@@ -22,6 +22,7 @@ def test_download_paper_exception():
             summary="This is a test paper.",
             authors=["John Doe", "Jane Doe"],
             categories=["cs.AI", "cs.LG"],
+            viewed=False,
         )
 
         path = Path(tmpdir) / f"{paper_id}.pdf"
