@@ -7,4 +7,5 @@ launch.json
 *.DS_Store
 *.db
 *.joblib
+*.pdf
 *.pyc

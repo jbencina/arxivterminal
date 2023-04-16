@@ -16,6 +16,7 @@ sample_papers = [
         published=datetime(2022, 1, 1),
         authors=["Author 1"],
         categories=["Category 1"],
+        viewed=False,
     ),
     ArxivPaper(
         entry_id="2",
@@ -25,6 +26,7 @@ sample_papers = [
         published=datetime(2022, 1, 2),
         authors=["Author 2"],
         categories=["Category 2"],
+        viewed=False,
     ),
     ArxivPaper(
         entry_id="3",
@@ -34,6 +36,7 @@ sample_papers = [
         published=datetime(2022, 1, 3),
         authors=["Author 3"],
         categories=["Category 3"],
+        viewed=False,
     ),
     ArxivPaper(
         entry_id="4",
@@ -43,6 +46,7 @@ sample_papers = [
         published=datetime(2022, 1, 4),
         authors=["Author 4"],
         categories=["Category 4"],
+        viewed=False,
     ),
     ArxivPaper(
         entry_id="5",
@@ -52,6 +56,7 @@ sample_papers = [
         published=datetime(2022, 1, 5),
         authors=["Author 5"],
         categories=["Category 5"],
+        viewed=False,
     ),
 ]
 

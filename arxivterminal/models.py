@@ -17,3 +17,4 @@ class ArxivPaper(BaseModel):
     summary: str
     authors: List[str]
     categories: List[str]
+    viewed: bool

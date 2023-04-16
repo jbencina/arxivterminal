@@ -23,6 +23,7 @@ def test_papers():
             summary="This is another test paper.",
             authors=["John Doe", "Jane Smith"],
             categories=["cs.AI", "cs.CL"],
+            viewed=False,
         ),
         ArxivPaper(
             entry_id="1",
@@ -32,6 +33,7 @@ def test_papers():
             summary="This is a test paper.",
             authors=["John Doe", "Jane Smith"],
             categories=["cs.AI"],
+            viewed=False,
         ),
     ]
 
@@ -48,6 +50,7 @@ def test_save_and_get_papers(test_db, test_papers):
         assert paper.summary == test_papers[idx].summary
         assert paper.authors == test_papers[idx].authors
         assert paper.categories == test_papers[idx].categories
+        assert paper.viewed == test_papers[idx].viewed
 
 
 def test_delete_papers(test_db, test_papers):
