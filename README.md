@@ -1,7 +1,7 @@
 # Arxiv Terminal
 ![Tests](https://github.com/jbencina/arxivterminal/actions/workflows/main.yaml/badge.svg)
-![PyPI](https://img.shields.io/pypi/v/arxivterminal)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/arxivterminal)
+[![PyPI](https://img.shields.io/pypi/v/arxivterminal)](https://pypi.org/project/arxivterminal)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/arxivterminal)](https://pypi.org/project/arxivterminal)
 
 Arxiv Terminal is a command-line interface (CLI) tool for fetching, searching, and displaying papers from the [arXiv](https://arxiv.org/) preprint repository. The tool allows you to fetch papers from specified categories, search the fetched papers, and display their statistics.
 
