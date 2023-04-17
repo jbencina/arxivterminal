@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "arxivterminal"
-version = "0.3.0"
+version = "0.3.1"
 description = "An application for summarizing Arxiv results within the terminal"
 authors = ["John Bencina <jbencina@users.noreply.github.com>"]
 license = "GPL-3.0-or-later"
@@ -10,10 +10,6 @@ keywords = ["arxiv"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-requests = "^2.28.2"
-bs4 = "^0.0.1"
-openai = "^0.27.4"
-lxml = "^4.9.2"
 pydantic = "^1.10.7"
 arxiv = "^1.4.3"
 click = "^8.1.3"
