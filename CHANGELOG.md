@@ -1,9 +1,18 @@
 # Changelog
 
+## [0.3.2] - 2023-09-21
+### Changed
+- Bumped dependencies
+### Removed
+- Removed similar search and sklearn
+
 ## [0.3.1] - 2023-04-16
+### Changed
+- Bump dependency versions
+
+### Removed
 - Remove unused packages
 - Remove Poetry pre-commit hooks
-- Bump dependency versions
 
 ## [0.3.0] - 2023-04-15
 ### Added

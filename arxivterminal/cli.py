@@ -4,10 +4,9 @@ from datetime import datetime, timedelta
 
 import click
 
-from arxivterminal.constants import DATABASE_PATH, LOG_PATH, MODEL_PATH
+from arxivterminal.constants import DATABASE_PATH, LOG_PATH
 from arxivterminal.db import ArxivDatabase
 from arxivterminal.fetch import download_papers
-from arxivterminal.ml import LsaDocumentSearch
 from arxivterminal.output import ExitAppException, print_papers, print_stats
 
 
@@ -48,7 +47,6 @@ def delete_all():
     """
     db = ArxivDatabase(DATABASE_PATH)
     db.delete_papers()
-    logging.info("Deleted all papers from the database")
 
 
 @click.command()
@@ -82,29 +80,17 @@ def stats():
 @click.command()
 @click.argument("query")
 @click.option(
-    "-e", "--experimental", is_flag=True, help="Uses experimental LSA relevance search"
-)
-@click.option(
-    "-f", "--force", is_flag=True, help="Forces a refresh of the experimental model"
-)
-@click.option(
     "-l", "--limit", default=10, help="The maximum number of results to return"
 )
-def search(query, experimental, limit, force):
+def search(query, limit):
     """
     Search papers in the database based on a query.
     """
     db = ArxivDatabase(DATABASE_PATH)
-
-    if experimental:
-        # TODO: Try better approaches :)
-        lsa = LsaDocumentSearch(MODEL_PATH)
-        search_results = lsa.search(db, query, limit=limit, force_refresh=force)
-    else:
-        search_results = db.search_papers(query)[:limit]
+    search_results = db.search_papers(query)[:limit]
 
     try:
-        print_papers(search_results, show_dates=(not experimental))
+        print_papers(search_results, show_dates=True)
     except ExitAppException:
         sys.exit(0)
 

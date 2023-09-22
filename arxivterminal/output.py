@@ -2,11 +2,10 @@ from typing import List
 
 from termcolor import colored
 
-from arxivterminal.constants import DATABASE_PATH, MODEL_PATH
+from arxivterminal.constants import DATABASE_PATH
 from arxivterminal.db import ArxivDatabase, ArxivStats
 from arxivterminal.download import download_paper
 from arxivterminal.fetch import ArxivPaper
-from arxivterminal.ml import LsaDocumentSearch
 
 
 class ExitAppException(Exception):
@@ -88,19 +87,14 @@ def print_papers(papers: List[ArxivPaper], show_dates: bool = True):
                     except FileExistsError:
                         pass
                     user_input = input(
-                        "Enter 'b' to go back, 'd' to download, 's' to search similar, or 'q' to quit: "
+                        "Enter 'b' to go back, 'd' to download, or 'q' to quit: "
                     )
                     continue
-                elif user_input.lower() == "s":
-                    db = ArxivDatabase(str(DATABASE_PATH))
-                    lsa = LsaDocumentSearch(str(MODEL_PATH))
-                    search_results = lsa.search(db, selected_paper.summary)
-                    print_papers(search_results, show_dates=False)
 
                 print("Invalid input. Please try again.")
 
             user_input = input(
-                "Enter the line number to show the full abstract, 'b' to go back, 'd' to download, 's' to search similar, or 'q' to quit: "  # noqa: E501
+                "Enter the line number to show the full abstract, 'b' to go back, 'd' to download, or 'q' to quit: "  # noqa: E501
             )
 
 
