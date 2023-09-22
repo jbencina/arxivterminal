@@ -3,6 +3,7 @@
 dist
 
 launch.json
+settings.json
 
 *.DS_Store
 *.db
