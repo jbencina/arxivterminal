@@ -35,9 +35,9 @@ def fetch(num_days, categories):
     categories = categories.split(",")
     db = ArxivDatabase(DATABASE_PATH)
     for category in categories:
+        logging.info(f"Fetching papers from {category}")
         papers = download_papers(category, num_days=num_days)
         db.save_papers(papers)
-        logging.info(f"Fetched papers from {category}")
 
 
 @click.command()
